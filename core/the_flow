@@ -241,7 +241,7 @@ if [[ $tf_only_step == 1 && $tf_to_step == 1 ]] ; then
   exit
 fi
 
-python3 "$(which the_flow)"_scripts.py \
+python3.10 "$(which the_flow)"_scripts.py \
         "$tf_config" \
         $tf_is_syn \
         $tf_is_impl \
