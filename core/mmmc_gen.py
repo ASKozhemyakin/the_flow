@@ -479,7 +479,10 @@ class MmmcGen(Messages):
 
     @staticmethod
     def create_rc_corner_template(name, temperature, qrc_tech):
-        t = Template('create_rc_corner -name {{ n }} -temperature {{ te }} -qrc_tech {{ q_t }}')
+        if qrc_tech.find('captable') != -1:
+            t = Template('create_rc_corner -name {{ n }} -temperature {{ te }} -cap_table {{ q_t }}')
+        else:
+            t = Template('create_rc_corner -name {{ n }} -temperature {{ te }} -qrc_tech {{ q_t }}')
         return t.render(n=name, te=temperature, q_t=qrc_tech)
 
     @staticmethod
@@ -633,6 +636,7 @@ class MmmcGen(Messages):
             data = data.replace('-si', '\\\n    -si')
             data = data.replace('-temperature', '\\\n    -temperature')
             data = data.replace('-qrc_tech', '\\\n    -qrc_tech')
+            data = data.replace('-cap_table', '\\\n    -cap_table')
             data = data.replace('-rc_corner', '\\\n    -rc_corner')
             data = data.replace('-sdc_files', '\\\n    -sdc_files')
             data = data.replace('-constraint_mode', '\\\n    -constraint_mode')
