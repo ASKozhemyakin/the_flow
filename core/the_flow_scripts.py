@@ -108,7 +108,6 @@ if __name__ == "__main__":
     from phy_gen import PhyGen
 
     from tcl_scr_gen import TclScrGen
-    from tcl_scr_gen_vars import TclScrGen_vars
 
     from run_eda_tools import RunEDATools
 
@@ -193,173 +192,15 @@ if __name__ == "__main__":
 
     if global_tf_vars.tf_update_run_dir_in_cfg:
         for i in os.scandir(global_tf_vars.tf_run_dir_in_cfg):
-            os.remove(i)
+            if i.name != 'vars_config.tcl':
+                os.remove(i)
         MmmcGen.run_mmmc_gen()
         PhyGen.run_phy_gen()
 
-        '''
-        TCL_SCR Generator
-        '''
 
-        ################################################
-        # The Flow modification
-        ################################################
-        global_tf_vars.tf_tmp_file_steps_import = global_tf_vars.tf_run_dir_work_tmp + '/tf_tmp_file_steps_import.py'
-        global_tf_vars.tf_tmp_step_table = global_tf_vars.tf_run_dir_work_tmp + '/tf_tmp_step_table.py'
-
-        if global_tf_vars.tf_is_syn:
-            if global_tf_vars.tf_var_syn_table_exists:
-                run_vars_gen = TclScrGen_vars(global_tf_vars.tf_syn_steps_dir,
-                                            tf_var_tmp.tf_step_syn_table,
-                                            global_tf_vars.tf_run_dir_scripts,
-                                            global_tf_vars.tf_run_dir_work_tmp,
-                                            global_tf_vars.tf_tmp_file_steps_import,
-                                            global_tf_vars.tf_tmp_step_table,
-                                            'syn',
-                                            tf_var_tmp.tf_var_table,
-                                            tf_var_tmp.tf_var_syn_table,
-                                            tf_var_common.tf_var_common_table,
-                                            tf_var_tmp.tf_var_mmmc_table,
-                                            tf_var_tmp.mmmc_sdc_mode_table,
-                                            global_tf_vars.tf_run_dir_in_cfg)
-            else:
-                run_vars_gen = TclScrGen_vars(global_tf_vars.tf_syn_steps_dir,
-                                            tf_var_tmp.tf_step_syn_table,
-                                            global_tf_vars.tf_run_dir_scripts,
-                                            global_tf_vars.tf_run_dir_work_tmp,
-                                            global_tf_vars.tf_tmp_file_steps_import,
-                                            global_tf_vars.tf_tmp_step_table,
-                                            'syn',
-                                            tf_var_tmp.tf_var_table,
-                                            '',
-                                            tf_var_common.tf_var_common_table,
-                                            tf_var_tmp.tf_var_mmmc_table,
-                                            tf_var_tmp.mmmc_sdc_mode_table,
-                                            global_tf_vars.tf_run_dir_in_cfg)
-        if global_tf_vars.tf_is_impl:
-            if global_tf_vars.tf_var_impl_table_exists:
-                run_vars_gen = TclScrGen_vars(global_tf_vars.tf_impl_steps_dir,
-                                            tf_var_tmp.tf_step_impl_table,
-                                            global_tf_vars.tf_run_dir_scripts,
-                                            global_tf_vars.tf_run_dir_work_tmp,
-                                            global_tf_vars.tf_tmp_file_steps_import,
-                                            global_tf_vars.tf_tmp_step_table,
-                                            'impl',
-                                            tf_var_tmp.tf_var_table,
-                                            tf_var_tmp.tf_var_impl_table,
-                                            tf_var_common.tf_var_common_table,
-                                            tf_var_tmp.tf_var_mmmc_table,
-                                            tf_var_tmp.mmmc_sdc_mode_table,
-                                            global_tf_vars.tf_run_dir_in_cfg)
-            else:
-                run_vars_gen = TclScrGen_vars(global_tf_vars.tf_impl_steps_dir,
-                                            tf_var_tmp.tf_step_impl_table,
-                                            global_tf_vars.tf_run_dir_scripts,
-                                            global_tf_vars.tf_run_dir_work_tmp,
-                                            global_tf_vars.tf_tmp_file_steps_import,
-                                            global_tf_vars.tf_tmp_step_table,
-                                            'impl',
-                                            tf_var_tmp.tf_var_table,
-                                            '',
-                                            tf_var_common.tf_var_common_table,
-                                            tf_var_tmp.tf_var_mmmc_table,
-                                            tf_var_tmp.mmmc_sdc_mode_table,
-                                            global_tf_vars.tf_run_dir_in_cfg)
-
-        if global_tf_vars.tf_is_atpg:
-            if global_tf_vars.tf_var_atpg_table_exists:
-                run_vars_gen = TclScrGen_vars(global_tf_vars.tf_atpg_steps_dir,
-                                            tf_var_tmp.tf_step_atpg_table,
-                                            global_tf_vars.tf_run_dir_scripts,
-                                            global_tf_vars.tf_run_dir_work_tmp,
-                                            global_tf_vars.tf_tmp_file_steps_import,
-                                            global_tf_vars.tf_tmp_step_table,
-                                            'atpg',
-                                            tf_var_tmp.tf_var_table,
-                                            tf_var_tmp.tf_var_atpg_table,
-                                            tf_var_common.tf_var_common_table,
-                                            tf_var_tmp.tf_var_mmmc_table,
-                                            tf_var_tmp.mmmc_sdc_mode_table,
-                                            global_tf_vars.tf_run_dir_in_cfg)
-            else:
-                run_vars_gen = TclScrGen_vars(global_tf_vars.tf_atpg_steps_dir,
-                                            tf_var_tmp.tf_step_atpg_table,
-                                            global_tf_vars.tf_run_dir_scripts,
-                                            global_tf_vars.tf_run_dir_work_tmp,
-                                            global_tf_vars.tf_tmp_file_steps_import,
-                                            global_tf_vars.tf_tmp_step_table,
-                                            'atpg',
-                                            tf_var_tmp.tf_var_table,
-                                            '',
-                                            tf_var_common.tf_var_common_table,
-                                            tf_var_tmp.tf_var_mmmc_table,
-                                            tf_var_tmp.mmmc_sdc_mode_table,
-                                            global_tf_vars.tf_run_dir_in_cfg)
-
-        if global_tf_vars.tf_is_power:
-            if global_tf_vars.tf_var_power_table_exists:
-                run_vars_gen = TclScrGen_vars(global_tf_vars.tf_power_steps_dir,
-                                            tf_var_tmp.tf_step_power_table,
-                                            global_tf_vars.tf_run_dir_scripts,
-                                            global_tf_vars.tf_run_dir_work_tmp,
-                                            global_tf_vars.tf_tmp_file_steps_import,
-                                            global_tf_vars.tf_tmp_step_table,
-                                            'power',
-                                            tf_var_tmp.tf_var_table,
-                                            tf_var_tmp.tf_var_power_table,
-                                            tf_var_common.tf_var_common_table,
-                                            tf_var_tmp.tf_var_mmmc_table,
-                                            tf_var_tmp.mmmc_sdc_mode_table,
-                                            global_tf_vars.tf_run_dir_in_cfg)
-            else:
-                run_vars_gen = TclScrGen_vars(global_tf_vars.tf_power_steps_dir,
-                                            tf_var_tmp.tf_step_power_table,
-                                            global_tf_vars.tf_run_dir_scripts,
-                                            global_tf_vars.tf_run_dir_work_tmp,
-                                            global_tf_vars.tf_tmp_file_steps_import,
-                                            global_tf_vars.tf_tmp_step_table,
-                                            'power',
-                                            tf_var_tmp.tf_var_table,
-                                            '',
-                                            tf_var_common.tf_var_common_table,
-                                            tf_var_tmp.tf_var_mmmc_table,
-                                            tf_var_tmp.mmmc_sdc_mode_table,
-                                            global_tf_vars.tf_run_dir_in_cfg)
-        if global_tf_vars.tf_is_formal:
-            if global_tf_vars.tf_var_formal_table_exists:
-                run_vars_gen = TclScrGen_vars(global_tf_vars.tf_formal_steps_dir,
-                                            tf_var_tmp.tf_step_formal_table,
-                                            global_tf_vars.tf_run_dir_scripts,
-                                            global_tf_vars.tf_run_dir_work_tmp,
-                                            global_tf_vars.tf_tmp_file_steps_import,
-                                            global_tf_vars.tf_tmp_step_table,
-                                            'formal',
-                                            tf_var_tmp.tf_var_table,
-                                            tf_var_tmp.tf_var_formal_table,
-                                            tf_var_common.tf_var_common_table,
-                                            tf_var_tmp.tf_var_mmmc_table,
-                                            tf_var_tmp.mmmc_sdc_mode_table,
-                                            global_tf_vars.tf_run_dir_in_cfg)
-            else:
-                run_vars_gen = TclScrGen_vars(global_tf_vars.tf_formal_steps_dir,
-                                            tf_var_tmp.tf_step_formal_table,
-                                            global_tf_vars.tf_run_dir_scripts,
-                                            global_tf_vars.tf_run_dir_work_tmp,
-                                            global_tf_vars.tf_tmp_file_steps_import,
-                                            global_tf_vars.tf_tmp_step_table,
-                                            'formal',
-                                            tf_var_tmp.tf_var_table,
-                                            '',
-                                            tf_var_common.tf_var_common_table,
-                                            tf_var_tmp.tf_var_mmmc_table,
-                                            tf_var_tmp.mmmc_sdc_mode_table,
-                                            global_tf_vars.tf_run_dir_in_cfg)
-
-        run_vars_gen.run()
-
-    ################################################
-    #   End the Flow modification
-    ################################################
+    '''
+    TCL_SCR Generator
+    '''
 
     global_tf_vars.tf_tmp_file_steps_import = global_tf_vars.tf_run_dir_work_tmp + '/tf_tmp_file_steps_import.py'
     global_tf_vars.tf_tmp_step_table = global_tf_vars.tf_run_dir_work_tmp + '/tf_tmp_step_table.py'
