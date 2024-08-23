@@ -57,6 +57,14 @@ def check_tables():
             m.init_6('mmmc_lib_file_table', 'tf_var_common.py')
 
     try:
+        tf_var_common.mmmc_aocv_file_table
+    except AttributeError:
+        if global_tf_vars.tf_is_syn == 1 or global_tf_vars.tf_is_impl == 1 or global_tf_vars.tf_is_power == 1:
+            m.init_5('mmmc_aocv_file_table', 'tf_var_common.py')
+        else:
+            m.init_6('mmmc_aocv_file_table', 'tf_var_common.py')
+
+    try:
         tf_var_common.mmmc_cdb_file_table
     except AttributeError:
         if global_tf_vars.tf_is_syn == 1 or global_tf_vars.tf_is_impl == 1 or global_tf_vars.tf_is_power == 1:

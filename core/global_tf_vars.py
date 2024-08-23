@@ -106,6 +106,7 @@ mmmc_analysis_view_table_mode = {}
 mmmc_analysis_view_table_name = {}
 mmmc_analysis_view_table_lib = {}
 mmmc_analysis_view_table_lib_partitions = {}
+mmmc_analysis_view_table_aocv = {}
 mmmc_analysis_view_table_cdb = {}
 mmmc_analysis_view_table_qrc = {}
 mmmc_analysis_view_table_temperature = {}
