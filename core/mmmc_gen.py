@@ -19,6 +19,7 @@ class MmmcGen(Messages, CommonFunc):
                  mmmc_pvt_t_table_,
                  mmmc_pvt_table_,
                  mmmc_lib_file_table_,
+                 mmmc_aocv_file_table_,
                  mmmc_cdb_file_table_,
                  mmmc_pvt_qrc_table_,
                  mmmc_qrc_file_table_,
@@ -31,6 +32,7 @@ class MmmcGen(Messages, CommonFunc):
         self.mmmc_pvt_t_table = mmmc_pvt_t_table_
         self.mmmc_pvt_table = mmmc_pvt_table_
         self.mmmc_lib_file_table = mmmc_lib_file_table_
+        self.mmmc_aocv_file_table = mmmc_aocv_file_table_
         self.mmmc_cdb_file_table = mmmc_cdb_file_table_
         self.mmmc_pvt_qrc_table = mmmc_pvt_qrc_table_
         self.mmmc_qrc_file_table = mmmc_qrc_file_table_
@@ -81,6 +83,7 @@ class MmmcGen(Messages, CommonFunc):
                 global_tf_vars.mmmc_analysis_view_table_name[n] = mix[0] + '_' + mix[1] + mix[2] + mix[3] + mix[4] + \
                     '_' + mix[5]
                 global_tf_vars.mmmc_analysis_view_table_lib[n] = ''
+                global_tf_vars.mmmc_analysis_view_table_aocv[n] = ''
                 global_tf_vars.mmmc_analysis_view_table_lib_partitions[n] = ''
                 global_tf_vars.mmmc_analysis_view_table_cdb[n] = ''
                 global_tf_vars.mmmc_analysis_view_table_qrc[n] = ''
@@ -361,6 +364,205 @@ class MmmcGen(Messages, CommonFunc):
                                            global_tf_vars.tf_var_mmmc_table[preset] + ']')
 
         self.tf_info('(TFMmmcGen.make_lib_files_list_for_each_view) finish')
+
+    def make_aocv_files_list_for_each_view(self):
+        self.tf_info('(TFMmmcGen.make_aocv_files_list_for_each_view) start')
+        for aocv in range(len(self.mmmc_aocv_file_table)):
+            for preset in range(len(global_tf_vars.tf_var_mmmc_table)):
+                if global_tf_vars.tf_var_mmmc_table[preset] == self.mmmc_aocv_file_table[aocv][0]:
+                    for aocv_file in range(1, len(tf_var_common.mmmc_aocv_file_table[aocv])):
+
+                        temp_type_flag_1 = 0
+                        temp_type_flag_2 = 0
+                        temp_type_flag_3 = 0
+                        temp_type_flag_4 = 0
+
+                        if '{{ process_voltage_temperature }}' in self.mmmc_aocv_file_table[aocv][aocv_file]:
+                            temp_type_flag_2 = 1
+                        elif '{{ analysis_mode }}' in self.mmmc_aocv_file_table[aocv][aocv_file]:
+                            temp_type_flag_3 = 1
+                        elif '{{ process }}' in self.mmmc_aocv_file_table[aocv][aocv_file] or \
+                                '{{ voltage }}' in self.mmmc_aocv_file_table[aocv][aocv_file] or \
+                                '{{ temperature }}' in self.mmmc_aocv_file_table[aocv][aocv_file]:
+                            temp_type_flag_1 = 1
+                        else:
+                            temp_type_flag_4 = 1
+
+                        existing_flag = 0
+
+                        if temp_type_flag_1 == 1:
+                            for p in range(len(self.mmmc_pvt_p_table)):
+                                for v in range(len(self.mmmc_pvt_v_table)):
+                                    for t in range(len(self.mmmc_pvt_t_table)):
+                                        for m in range(len(global_tf_vars.mmmc_analysis_view_table_pvt_p)):
+                                            if self.mmmc_pvt_p_table[p][0] == \
+                                                    global_tf_vars.mmmc_analysis_view_table_pvt_p[m] and \
+                                                    self.mmmc_pvt_v_table[v][0] == \
+                                                    global_tf_vars.mmmc_analysis_view_table_pvt_v[m] and \
+                                                    self.mmmc_pvt_t_table[t][0] == \
+                                                    global_tf_vars.mmmc_analysis_view_table_pvt_t[m]:
+                                                existing_flag = 0
+                                                for pvt_pvt in product(self.mmmc_pvt_p_table[p],
+                                                                       self.mmmc_pvt_v_table[v],
+                                                                       self.mmmc_pvt_t_table[t]):
+                                                    answer = self.tf_file_exists_check(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            pvt_pvt[0],
+                                                            pvt_pvt[1],
+                                                            pvt_pvt[2],
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_aocv_file_table[aocv][aocv_file]))
+                                                    if answer == 'True':
+                                                        existing_flag = 1
+                                                        global_tf_vars.mmmc_analysis_view_table_aocv[m] = \
+                                                            global_tf_vars.mmmc_analysis_view_table_aocv[m] + \
+                                                            ' perehod_na_novuy_stroku ' + \
+                                                            '../in/aocv/' + \
+                                                            os.path.basename(
+                                                                self.create_lib_cdb_file_template(
+                                                                    '',
+                                                                    pvt_pvt[0],
+                                                                    pvt_pvt[1],
+                                                                    pvt_pvt[2],
+                                                                    '',
+                                                                    '',
+                                                                    '',
+                                                                    self.mmmc_aocv_file_table[aocv][aocv_file])
+                                                            )
+                                                        self.tf_cp_file(
+                                                            self.create_lib_cdb_file_template(
+                                                                '',
+                                                                pvt_pvt[0],
+                                                                pvt_pvt[1],
+                                                                pvt_pvt[2],
+                                                                '',
+                                                                '',
+                                                                '',
+                                                                self.mmmc_aocv_file_table[aocv][aocv_file]),
+                                                            global_tf_vars.tf_run_dir_in_aocv
+                                                        )
+#                                                if existing_flag == 0:
+#                                                    self.mmmcgen_2(
+#                                                        self.mmmc_aocv_file_table[aocv][aocv_file],
+#                                                        self.mmmc_pvt_p_table[p][0] +
+#                                                        self.mmmc_pvt_v_table[v][0] +
+#                                                        self.mmmc_pvt_t_table[t][0],
+#                                                        self.mmmc_aocv_file_table[aocv][0]
+#                                                    )
+
+                        if temp_type_flag_2 == 1:
+                            for i in range(len(self.mmmc_pvt_table)):
+                                for view in range(len(global_tf_vars.mmmc_analysis_view_table_sdc_mode)):
+                                    if global_tf_vars.mmmc_analysis_view_table_pvt[view] == self.mmmc_pvt_table[i][0]:
+                                        existing_flag = 0
+                                        for j in range(len(self.mmmc_pvt_table[i])):
+                                            answer = self.tf_file_exists_check(
+                                                self.create_lib_cdb_file_template(
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    self.mmmc_pvt_table[i][j],
+                                                    '',
+                                                    '',
+                                                    self.mmmc_aocv_file_table[aocv][aocv_file]))
+                                            if answer == 'True':
+                                                existing_flag = 1
+                                                global_tf_vars.mmmc_analysis_view_table_aocv[view] = \
+                                                    global_tf_vars.mmmc_analysis_view_table_aocv[view] + \
+                                                    ' perehod_na_novuy_stroku ' + \
+                                                    '../in/aocv/' + \
+                                                    os.path.basename(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_pvt_table[i][j],
+                                                            '',
+                                                            '',
+                                                            self.mmmc_aocv_file_table[aocv][aocv_file])
+                                                    )
+                                                self.tf_cp_file(
+                                                    self.create_lib_cdb_file_template(
+                                                        '',
+                                                        '',
+                                                        '',
+                                                        '',
+                                                        self.mmmc_pvt_table[i][j],
+                                                        '',
+                                                        '',
+                                                        self.mmmc_aocv_file_table[aocv][aocv_file]),
+                                                    global_tf_vars.tf_run_dir_in_aocv
+                                                )
+#                                        if existing_flag == 0:
+#                                            self.mmmcgen_2(
+#                                                self.mmmc_aocv_file_table[aocv][aocv_file],
+#                                                self.mmmc_pvt_table[i][0],
+#                                                self.mmmc_aocv_file_table[aocv][0]
+#                                            )
+
+                        if temp_type_flag_4 == 1:
+                            for i in range(len(self.mmmc_pvt_table)):
+                                for view in range(len(global_tf_vars.mmmc_analysis_view_table_sdc_mode)):
+                                    if global_tf_vars.mmmc_analysis_view_table_pvt[view] == self.mmmc_pvt_table[i][0]:
+                                        existing_flag = 0
+                                        for j in range(len(self.mmmc_pvt_table[i])):
+                                            answer = self.tf_file_exists_check(
+                                                self.create_lib_cdb_file_template(
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    self.mmmc_aocv_file_table[aocv][aocv_file]))
+                                            if answer == 'True':
+                                                existing_flag = 1
+                                                global_tf_vars.mmmc_analysis_view_table_aocv[view] = \
+                                                    global_tf_vars.mmmc_analysis_view_table_aocv[view] + \
+                                                    ' perehod_na_novuy_stroku ' + \
+                                                    '../in/aocv/' + \
+                                                    os.path.basename(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_aocv_file_table[aocv][aocv_file])
+                                                    )
+                                                self.tf_cp_file(
+                                                    self.create_lib_cdb_file_template(
+                                                        '',
+                                                        '',
+                                                        '',
+                                                        '',
+                                                        '',
+                                                        '',
+                                                        '',
+                                                        self.mmmc_aocv_file_table[aocv][aocv_file]),
+                                                    global_tf_vars.tf_run_dir_in_aocv
+                                                )
+                                                break
+#                                        if existing_flag == 0:
+#                                            self.mmmcgen_2(
+#                                                self.mmmc_aocv_file_table[aocv][aocv_file],
+#                                                self.mmmc_pvt_table[i][0],
+#                                                self.mmmc_aocv_file_table[aocv][0]
+#                                            )
+
+#                        if existing_flag == 0:
+#                            self.mmmcgen_1(self.mmmc_aocv_file_table[aocv][aocv_file], 'mmmc_aocv_file_table[' +
+#                                           global_tf_vars.tf_var_mmmc_table[preset] + ']')
+
+        self.tf_info('(TFMmmcGen.make_aocv_files_list_for_each_view) finish')
 
     def make_cdb_files_list_for_each_view(self):
         self.tf_info('(TFMmmcGen.make_cdb_files_list_for_each_view) start')
@@ -655,12 +857,16 @@ class MmmcGen(Messages, CommonFunc):
         return mmmc_analysis_view_power
 
     @staticmethod
-    def create_library_set_template(name, lib_files, cdb_files):
-        if cdb_files == "":
+    def create_library_set_template(name, lib_files, aocv_files, cdb_files):
+        if (aocv_files == "") and (cdb_files == ""):
             t = Template('create_library_set -name {{ n }} -timing \"{{ lib }}\"')
-        else:
+        elif aocv_files == "":
             t = Template('create_library_set -name {{ n }} -timing \"{{ lib }}\" -si \"{{ cdb }}\"')
-        return t.render(n=name, lib=lib_files, cdb=cdb_files)
+        elif cdb_files == "":
+            t = Template('create_library_set -name {{ n }} -timing \"{{ lib }}\" -aocv \"{{ aocv }}\"')
+        else:
+            t = Template('create_library_set -name {{ n }} -timing \"{{ lib }}\" -aocv \"{{ aocv }}\" -si \"{{ cdb }}\"')
+        return t.render(n=name, lib=lib_files, aocv=aocv_files, cdb=cdb_files)
 
     @staticmethod
     def create_timing_condition_template(name, lib_sets):
@@ -717,6 +923,7 @@ class MmmcGen(Messages, CommonFunc):
                     global_tf_vars.mmmc_analysis_view_table_pvt_v[i] +
                     global_tf_vars.mmmc_analysis_view_table_pvt_t[i],
                     global_tf_vars.mmmc_analysis_view_table_lib[i],
+                    global_tf_vars.mmmc_analysis_view_table_aocv[i],
                     global_tf_vars.mmmc_analysis_view_table_cdb[i]
                 ))
             if global_tf_vars.tf_partition_existing == 1:
@@ -823,6 +1030,7 @@ class MmmcGen(Messages, CommonFunc):
             data = data.replace('-name', '\\\n    -name')
             data = data.replace('-timing', '\\\n    -timing')
             data = data.replace('-library_sets', '\\\n    -library_sets')
+            data = data.replace('-aocv', '\\\n    -aocv')
             data = data.replace('-si', '\\\n    -si')
             data = data.replace('-temperature', '\\\n    -temperature')
             data = data.replace('-qrc_tech', '\\\n    -qrc_tech')
@@ -922,6 +1130,7 @@ class MmmcGen(Messages, CommonFunc):
                                   tf_var_common.mmmc_pvt_t_table,
                                   tf_var_common.mmmc_pvt_table,
                                   tf_var_common.mmmc_lib_file_table,
+                                  tf_var_common.mmmc_aocv_file_table,
                                   tf_var_common.mmmc_cdb_file_table,
                                   tf_var_common.mmmc_pvt_qrc_table,
                                   tf_var_common.mmmc_qrc_file_table,
@@ -935,6 +1144,7 @@ class MmmcGen(Messages, CommonFunc):
                                   tf_var_common.mmmc_pvt_t_table,
                                   tf_var_common.mmmc_pvt_table,
                                   tf_var_common.mmmc_lib_file_table,
+                                  tf_var_common.mmmc_aocv_file_table,
                                   tf_var_common.mmmc_cdb_file_table,
                                   tf_var_common.mmmc_pvt_qrc_table,
                                   tf_var_common.mmmc_qrc_file_table,
@@ -948,6 +1158,7 @@ class MmmcGen(Messages, CommonFunc):
                                   tf_var_common.mmmc_pvt_t_table,
                                   tf_var_common.mmmc_pvt_table,
                                   tf_var_common.mmmc_lib_file_table,
+                                  tf_var_common.mmmc_aocv_file_table,
                                   tf_var_common.mmmc_cdb_file_table,
                                   tf_var_common.mmmc_pvt_qrc_table,
                                   tf_var_common.mmmc_qrc_file_table,
@@ -965,6 +1176,7 @@ class MmmcGen(Messages, CommonFunc):
 
             tf_mmmc_gen.parsing_analysis_view_table()
             tf_mmmc_gen.make_lib_files_list_for_each_view()
+            tf_mmmc_gen.make_aocv_files_list_for_each_view()
             tf_mmmc_gen.make_cdb_files_list_for_each_view()
             tf_mmmc_gen.make_qrc_files_list_for_each_view()
             tf_mmmc_gen.make_temperature_for_each_view()
