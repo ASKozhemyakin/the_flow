@@ -1,14 +1,16 @@
 """
 Physical data generator.
 """
+import os.path
 import sys
 from jinja2 import Template
 import tf_var_common
 import global_tf_vars
 from messages import Messages
+from common_func import CommonFunc
 
 
-class PhyGen(Messages):
+class PhyGen(Messages, CommonFunc):
 
     def __init__(self, phy_lef_table_, phy_verilog_table_, phy_cl_table_, phy_gds_table_):
         self.phy_lef_table = phy_lef_table_
@@ -26,8 +28,14 @@ class PhyGen(Messages):
                 if self.phy_lef_table[i][0] == global_tf_vars.tf_var_mmmc_table[j]:
                     for n in range(1, len(self.phy_lef_table[i])):
                         if self.tf_file_exists_check(self.phy_lef_table[i][n]) == 'True':
-                            global_tf_vars.phy_lef_files = global_tf_vars.phy_lef_files + ' \\\n    ' + \
-                                                           self.phy_lef_table[i][n]
+                            global_tf_vars.phy_lef_files = \
+                                global_tf_vars.phy_lef_files + \
+                                ' \\\n    ' + \
+                                '../in/lef/' + \
+                                os.path.basename(
+                                    self.phy_lef_table[i][n]
+                                )
+                            self.tf_cp_file(self.phy_lef_table[i][n], global_tf_vars.tf_run_dir_in_lef)
                         elif self.tf_file_exists_check(self.phy_lef_table[i][n]) == 'False':
                             self.phygen_1(self.phy_lef_table[i][n], 'phy_lef_table')
 
@@ -52,8 +60,14 @@ class PhyGen(Messages):
                 if self.phy_verilog_table[i][0] == global_tf_vars.tf_var_mmmc_table[j]:
                     for n in range(1, len(self.phy_verilog_table[i])):
                         if self.tf_file_exists_check(self.phy_verilog_table[i][n]) == 'True':
-                            global_tf_vars.phy_verilog_files = global_tf_vars.phy_verilog_files + ' \\\n    ' + \
-                                                           self.phy_verilog_table[i][n]
+                            global_tf_vars.phy_verilog_files = \
+                                global_tf_vars.phy_verilog_files + \
+                                ' \\\n    ' + \
+                                '../in/vlg/' + \
+                                os.path.basename(
+                                    self.phy_verilog_table[i][n]
+                                )
+                            self.tf_cp_file(self.phy_verilog_table[i][n], global_tf_vars.tf_run_dir_in_vlg)
                         elif self.tf_file_exists_check(self.phy_verilog_table[i][n]) == 'False':
                             self.phygen_1(self.phy_verilog_table[i][n], 'phy_verilog_table')
 
@@ -78,8 +92,14 @@ class PhyGen(Messages):
                 if self.phy_cl_table[i][0] == global_tf_vars.tf_var_mmmc_table[j]:
                     for n in range(1, len(self.phy_cl_table[i])):
                         if self.tf_dir_exists_check(self.phy_cl_table[i][n]):
-                            global_tf_vars.phy_cl_dirs = global_tf_vars.phy_cl_dirs + ' \\\n    ' + \
-                                                           self.phy_cl_table[i][n]
+                            global_tf_vars.phy_cl_dirs = \
+                                global_tf_vars.phy_cl_dirs + \
+                                ' \\\n    ' + \
+                                '../in/cl/' + \
+                                os.path.basename(
+                                    self.phy_cl_table[i][n]
+                                )
+                            self.tf_cp_dir(self.phy_cl_table[i][n], global_tf_vars.tf_run_dir_in_cl)
                         else:
                             self.phygen_1(self.phy_cl_table[i][n], 'phy_cl_table')
 
@@ -104,8 +124,14 @@ class PhyGen(Messages):
                 if self.phy_gds_table[i][0] == global_tf_vars.tf_var_mmmc_table[j]:
                     for n in range(1, len(self.phy_gds_table[i])):
                         if self.tf_file_exists_check(self.phy_gds_table[i][n]) == 'True':
-                            global_tf_vars.phy_gds_files = global_tf_vars.phy_gds_files + ' \\\n    ' + \
-                                                           self.phy_gds_table[i][n]
+                            global_tf_vars.phy_gds_files = \
+                                global_tf_vars.phy_gds_files + \
+                                ' \\\n    ' + \
+                                '../in/gds/' + \
+                                os.path.basename(
+                                    self.phy_gds_table[i][n]
+                                )
+                            self.tf_cp_file(self.phy_gds_table[i][n], global_tf_vars.tf_run_dir_in_gds)
                         elif self.tf_file_exists_check(self.phy_gds_table[i][n]) == 'False':
                             self.phygen_1(self.phy_gds_table[i][n], 'phy_gds_table')
 
@@ -144,8 +170,22 @@ class PhyGen(Messages):
 
         tf_phy_gen = PhyGen(tf_var_common.phy_lef_table, tf_var_common.phy_verilog_table, tf_var_common.phy_cl_table,
                             tf_var_common.phy_gds_table)
-        tf_phy_gen.make_lef_list()
-        tf_phy_gen.make_verilog_list()
-        tf_phy_gen.make_cl_list()
-        tf_phy_gen.make_gds_list()
+
+        if global_tf_vars.tf_is_syn == 1 \
+                or global_tf_vars.tf_is_impl == 1 \
+                or global_tf_vars.tf_is_power == 1:
+            tf_phy_gen.make_lef_list()
+
+        if global_tf_vars.tf_is_syn == 1 \
+                or global_tf_vars.tf_is_atpg == 1 \
+                or global_tf_vars.tf_is_formal:
+            tf_phy_gen.make_verilog_list()
+
+        if global_tf_vars.tf_is_power == 1:
+            tf_phy_gen.make_cl_list()
+
+        if global_tf_vars.tf_is_impl == 1 \
+                or global_tf_vars.tf_is_power == 1:
+            tf_phy_gen.make_gds_list()
+
         tf_phy_gen.make_phy_config_file()

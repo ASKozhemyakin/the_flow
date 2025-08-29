@@ -68,7 +68,8 @@ mmmc_pvt_qrc_table = (
 mmmc_lib_file_table = (
     ['std_lib', os.environ['TF_PATH'] + '/test_cases/tf_quick_start/src/std/lib/std_lib_hvt_{{ process }}_{{ voltage }}_{{ temperature }}.lib',
                 os.environ['TF_PATH'] + '/test_cases/tf_quick_start/src/std/lib/std_lib_lvt_{{ process }}_{{ voltage }}_{{ temperature }}.lib',
-                os.environ['TF_PATH'] + '/test_cases/tf_quick_start/src/std/lib/std_lib_rvt_{{ process }}_{{ voltage }}_{{ temperature }}.lib'
+                os.environ['TF_PATH'] + '/test_cases/tf_quick_start/src/std/lib/std_lib_rvt_{{ process }}_{{ voltage }}_{{ temperature }}.lib',
+                os.environ['TF_PATH'] + '/test_cases/tf_quick_start/src/mem/lib/memory_tc.lib'
      ],
     ['mem', os.environ['TF_PATH'] + '/test_cases/tf_quick_start/src/mem/lib/memory_{{ process_voltage_temperature }}.lib'
      ],
@@ -132,6 +133,13 @@ phy_verilog_table = (
 # Variables from phy_cl_table are used to configurate cl_list during phy_gen execution.
 # Use the following mandatory template: ['<mmmc_preset name>', 'cl_dir_1', 'cl_dir_2', ... ]
 phy_cl_table = (
+    ['std_lib', os.environ['TF_PATH'] + '/test_cases/tf_quick_start/src/std/cl_view/std_ml.cl'],
+    ['mem', os.environ['TF_PATH'] + '/test_cases/tf_quick_start/src/mem/cl_view/mem_ml.cl']
+)
+
+# Variables from phy_gds_table are used to configurate gds_list during phy_gen execution.
+# Use the following mandatory template: ['<mmmc_preset name>', 'gds_file_1', 'gds_file_2', ... ]
+phy_gds_table = (
     ['', ''],
     ['', '']
 )

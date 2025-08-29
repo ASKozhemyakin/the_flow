@@ -23,7 +23,7 @@ def copy_input_data():
                 shutil.copytree(j, global_tf_vars.tf_run_dir_in_sdc, dirs_exist_ok=True)
                 CommonFunc.tf_info('Directory ' + j + ' has been copied to ' + global_tf_vars.tf_run_dir_in_sdc)
 
-    if global_tf_vars.tf_is_syn == 1:
+    if global_tf_vars.tf_is_syn == 1 or global_tf_vars.tf_is_formal == 1:
         for i in range(len(global_tf_vars.tf_rtl_dir)):
             for j in glob.glob(global_tf_vars.tf_rtl_dir[i], recursive=True):
                 shutil.copytree(j, global_tf_vars.tf_run_dir_in_rtl, dirs_exist_ok=True)
@@ -59,4 +59,4 @@ def copy_input_data():
                 shutil.copytree(j, global_tf_vars.tf_run_dir_in_src, dirs_exist_ok=True)
                 CommonFunc.tf_info('Directory ' + j + ' has been copied to ' + global_tf_vars.tf_run_dir_in_src)
 
-    os.system('chmod 755 -R ' + global_tf_vars.tf_run_dir)
+    os.system('chmod -R 755 ' + global_tf_vars.tf_run_dir)
