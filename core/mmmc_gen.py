@@ -160,7 +160,7 @@ class MmmcGen(Messages, CommonFunc):
                                                                     '',
                                                                     self.mmmc_lib_file_table[lib][lib_file])
                                                             )
-                                                        self.tf_cp_file(
+                                                        self.tf_symlink_file(
                                                             self.create_lib_cdb_file_template(
                                                                 '',
                                                                 pvt_pvt[0],
@@ -214,7 +214,7 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_lib_file_table[lib][lib_file])
                                                     )
-                                                self.tf_cp_file(
+                                                self.tf_symlink_file(
                                                     self.create_lib_cdb_file_template(
                                                         '',
                                                         '',
@@ -281,7 +281,7 @@ class MmmcGen(Messages, CommonFunc):
                                                                         global_tf_vars.mmmc_analysis_view_table_mode[m],
                                                                         self.mmmc_lib_file_table[lib][lib_file])
                                                                 )
-                                                            self.tf_cp_file(
+                                                            self.tf_symlink_file(
                                                                 self.create_lib_cdb_file_template(
                                                                     global_tf_vars.mmmc_analysis_view_table_sdc_mode[m],
                                                                     pvt_pvt[0],
@@ -339,7 +339,7 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_lib_file_table[lib][lib_file])
                                                     )
-                                                self.tf_cp_file(
+                                                self.tf_symlink_file(
                                                     self.create_lib_cdb_file_template(
                                                         '',
                                                         '',
@@ -432,7 +432,7 @@ class MmmcGen(Messages, CommonFunc):
                                                                     '',
                                                                     self.mmmc_aocv_file_table[aocv][aocv_file])
                                                             )
-                                                        self.tf_cp_file(
+                                                        self.tf_symlink_file(
                                                             self.create_lib_cdb_file_template(
                                                                 '',
                                                                 pvt_pvt[0],
@@ -486,7 +486,7 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_aocv_file_table[aocv][aocv_file])
                                                     )
-                                                self.tf_cp_file(
+                                                self.tf_symlink_file(
                                                     self.create_lib_cdb_file_template(
                                                         '',
                                                         '',
@@ -538,7 +538,7 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_aocv_file_table[aocv][aocv_file])
                                                     )
-                                                self.tf_cp_file(
+                                                self.tf_symlink_file(
                                                     self.create_lib_cdb_file_template(
                                                         '',
                                                         '',
@@ -629,7 +629,7 @@ class MmmcGen(Messages, CommonFunc):
                                                                     '',
                                                                     self.mmmc_cdb_file_table[cdb][cdb_file])
                                                             )
-                                                        self.tf_cp_file(
+                                                        self.tf_symlink_file(
                                                             self.create_lib_cdb_file_template(
                                                                 '',
                                                                 pvt[0],
@@ -683,7 +683,7 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_cdb_file_table[cdb][cdb_file])
                                                     )
-                                                self.tf_cp_file(
+                                                self.tf_symlink_file(
                                                     self.create_lib_cdb_file_template(
                                                         '',
                                                         '',
@@ -734,7 +734,7 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_cdb_file_table[cdb][cdb_file])
                                                     )
-                                                self.tf_cp_file(
+                                                self.tf_symlink_file(
                                                     self.create_lib_cdb_file_template(
                                                         '',
                                                         '',

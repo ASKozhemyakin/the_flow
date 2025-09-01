@@ -153,6 +153,15 @@ class CommonFunc:
             system('chmod 755 ' + direct + '/' + os.path.basename(file))
 
     @staticmethod
+    def tf_symlink_file(file, direct):
+        """
+        This function is used to symlink some file to some directory.
+        """
+
+        if not os.path.exists(direct + '/' + os.path.basename(file)):
+            os.symlink(file, os.path.join(direct, os.path.basename(file)))
+
+    @staticmethod
     def tf_cp_dir(src_dir, dst_dir):
         """
         This function is used to copy some src_dir to some dst_dir.

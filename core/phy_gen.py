@@ -35,7 +35,7 @@ class PhyGen(Messages, CommonFunc):
                                 os.path.basename(
                                     self.phy_lef_table[i][n]
                                 )
-                            self.tf_cp_file(self.phy_lef_table[i][n], global_tf_vars.tf_run_dir_in_lef)
+                            self.tf_symlink_file(self.phy_lef_table[i][n], global_tf_vars.tf_run_dir_in_lef)
                         elif self.tf_file_exists_check(self.phy_lef_table[i][n]) == 'False':
                             self.phygen_1(self.phy_lef_table[i][n], 'phy_lef_table')
 
@@ -67,7 +67,7 @@ class PhyGen(Messages, CommonFunc):
                                 os.path.basename(
                                     self.phy_verilog_table[i][n]
                                 )
-                            self.tf_cp_file(self.phy_verilog_table[i][n], global_tf_vars.tf_run_dir_in_vlg)
+                            self.tf_symlink_file(self.phy_verilog_table[i][n], global_tf_vars.tf_run_dir_in_vlg)
                         elif self.tf_file_exists_check(self.phy_verilog_table[i][n]) == 'False':
                             self.phygen_1(self.phy_verilog_table[i][n], 'phy_verilog_table')
 
@@ -131,7 +131,7 @@ class PhyGen(Messages, CommonFunc):
                                 os.path.basename(
                                     self.phy_gds_table[i][n]
                                 )
-                            self.tf_cp_file(self.phy_gds_table[i][n], global_tf_vars.tf_run_dir_in_gds)
+                            self.tf_symlink_file(self.phy_gds_table[i][n], global_tf_vars.tf_run_dir_in_gds)
                         elif self.tf_file_exists_check(self.phy_gds_table[i][n]) == 'False':
                             self.phygen_1(self.phy_gds_table[i][n], 'phy_gds_table')
 
