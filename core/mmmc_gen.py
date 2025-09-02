@@ -931,6 +931,7 @@ class MmmcGen(Messages, CommonFunc):
                     print(self.create_library_set_template(
                         global_tf_vars.mmmc_analysis_view_table_name[i],
                         global_tf_vars.mmmc_analysis_view_table_lib_partitions[i],
+                        '',
                         ''
                     ))
             print('#')
