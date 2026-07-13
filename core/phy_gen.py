@@ -26,7 +26,7 @@ class PhyGen(Messages, CommonFunc):
         for i in range(len(self.phy_lef_table)):
             for j in range(len(global_tf_vars.tf_var_mmmc_table)):
                 if self.phy_lef_table[i][0] == global_tf_vars.tf_var_mmmc_table[j]:
-                    for n in range(1, len(self.phy_lef_table[i])):
+                    for n in range(2, len(self.phy_lef_table[i])):
                         if self.tf_file_exists_check(self.phy_lef_table[i][n]) == 'True':
                             global_tf_vars.phy_lef_files = \
                                 global_tf_vars.phy_lef_files + \
@@ -35,7 +35,12 @@ class PhyGen(Messages, CommonFunc):
                                 os.path.basename(
                                     self.phy_lef_table[i][n]
                                 )
-                            self.tf_symlink_file(self.phy_lef_table[i][n], global_tf_vars.tf_run_dir_in_lef)
+                            if self.phy_lef_table[i][1] == 'copy':
+                                self.tf_cp_file(self.phy_lef_table[i][n], global_tf_vars.tf_run_dir_in_lef)
+                            elif self.phy_lef_table[i][1] == 'link':
+                                self.tf_link_file(self.phy_lef_table[i][n], global_tf_vars.tf_run_dir_in_lef)
+                            else:
+                                self.phygen_2(self.phy_lef_table[i][n], 'phy_lef_table')
                         elif self.tf_file_exists_check(self.phy_lef_table[i][n]) == 'False':
                             self.phygen_1(self.phy_lef_table[i][n], 'phy_lef_table')
 
@@ -58,7 +63,7 @@ class PhyGen(Messages, CommonFunc):
         for i in range(len(self.phy_verilog_table)):
             for j in range(len(global_tf_vars.tf_var_mmmc_table)):
                 if self.phy_verilog_table[i][0] == global_tf_vars.tf_var_mmmc_table[j]:
-                    for n in range(1, len(self.phy_verilog_table[i])):
+                    for n in range(2, len(self.phy_verilog_table[i])):
                         if self.tf_file_exists_check(self.phy_verilog_table[i][n]) == 'True':
                             global_tf_vars.phy_verilog_files = \
                                 global_tf_vars.phy_verilog_files + \
@@ -67,7 +72,12 @@ class PhyGen(Messages, CommonFunc):
                                 os.path.basename(
                                     self.phy_verilog_table[i][n]
                                 )
-                            self.tf_symlink_file(self.phy_verilog_table[i][n], global_tf_vars.tf_run_dir_in_vlg)
+                            if self.phy_verilog_table[i][1] == 'copy':
+                                self.tf_cp_file(self.phy_verilog_table[i][n], global_tf_vars.tf_run_dir_in_vlg)
+                            elif self.phy_verilog_table[i][1] == 'link':
+                                self.tf_link_file(self.phy_verilog_table[i][n], global_tf_vars.tf_run_dir_in_vlg)
+                            else:
+                                self.phygen_2(self.phy_verilog_table[i][n], 'phy_verilog_table')
                         elif self.tf_file_exists_check(self.phy_verilog_table[i][n]) == 'False':
                             self.phygen_1(self.phy_verilog_table[i][n], 'phy_verilog_table')
 
@@ -90,7 +100,7 @@ class PhyGen(Messages, CommonFunc):
         for i in range(len(self.phy_cl_table)):
             for j in range(len(global_tf_vars.tf_var_mmmc_table)):
                 if self.phy_cl_table[i][0] == global_tf_vars.tf_var_mmmc_table[j]:
-                    for n in range(1, len(self.phy_cl_table[i])):
+                    for n in range(2, len(self.phy_cl_table[i])):
                         if self.tf_dir_exists_check(self.phy_cl_table[i][n]):
                             global_tf_vars.phy_cl_dirs = \
                                 global_tf_vars.phy_cl_dirs + \
@@ -99,7 +109,12 @@ class PhyGen(Messages, CommonFunc):
                                 os.path.basename(
                                     self.phy_cl_table[i][n]
                                 )
-                            self.tf_cp_dir(self.phy_cl_table[i][n], global_tf_vars.tf_run_dir_in_cl)
+                            if self.phy_cl_table[i][1] == 'copy':
+                                self.tf_cp_file(self.phy_cl_table[i][n], global_tf_vars.tf_run_dir_in_cl)
+                            elif self.phy_cl_table[i][1] == 'link':
+                                self.tf_link_file(self.phy_cl_table[i][n], global_tf_vars.tf_run_dir_in_cl)
+                            else:
+                                self.phygen_2(self.phy_cl_table[i][n], 'phy_cl_table')
                         else:
                             self.phygen_1(self.phy_cl_table[i][n], 'phy_cl_table')
 
@@ -122,7 +137,7 @@ class PhyGen(Messages, CommonFunc):
         for i in range(len(self.phy_gds_table)):
             for j in range(len(global_tf_vars.tf_var_mmmc_table)):
                 if self.phy_gds_table[i][0] == global_tf_vars.tf_var_mmmc_table[j]:
-                    for n in range(1, len(self.phy_gds_table[i])):
+                    for n in range(2, len(self.phy_gds_table[i])):
                         if self.tf_file_exists_check(self.phy_gds_table[i][n]) == 'True':
                             global_tf_vars.phy_gds_files = \
                                 global_tf_vars.phy_gds_files + \
@@ -131,7 +146,12 @@ class PhyGen(Messages, CommonFunc):
                                 os.path.basename(
                                     self.phy_gds_table[i][n]
                                 )
-                            self.tf_symlink_file(self.phy_gds_table[i][n], global_tf_vars.tf_run_dir_in_gds)
+                            if self.phy_gds_table[i][1] == 'copy':
+                                self.tf_cp_file(self.phy_gds_table[i][n], global_tf_vars.tf_run_dir_in_gds)
+                            elif self.phy_gds_table[i][1] == 'link':
+                                self.tf_link_file(self.phy_gds_table[i][n], global_tf_vars.tf_run_dir_in_gds)
+                            else:
+                                self.phygen_2(self.phy_gds_table[i][n], 'phy_gds_table')
                         elif self.tf_file_exists_check(self.phy_gds_table[i][n]) == 'False':
                             self.phygen_1(self.phy_gds_table[i][n], 'phy_gds_table')
 

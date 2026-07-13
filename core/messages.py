@@ -124,6 +124,17 @@ class Messages(CommonFunc):
         self.tf_error('[PHYGEN-1] File or dir ' + file_name + ' from ' + var_name + ' doesn\'t exist.')
         self.tf_exit_with_error()
 
+    def phygen_2(self, file_name, var_name):
+        """
+        ERROR : Wrong value of cp_link_mode variable in phy_*_table. Please, use 'link' or 'copy'
+
+        :param file_name: File or dir name.
+        :param var_name: Variable name.
+        :return: Text message into terminal window.
+        """
+
+        self.tf_error('[PHYGEN-2] Wrong value of cp_link_mode variable in phy_*_table. Please, use \'link\' or \'copy\'')
+
     def mmmcgen_1(self, file_name, var_name):
         """
         ERROR : Files * from * doesn't exist.

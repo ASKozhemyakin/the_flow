@@ -440,7 +440,7 @@ class MmmcGen(Messages, CommonFunc):
         for aocv in range(len(self.mmmc_aocv_file_table)):
             for preset in range(len(global_tf_vars.tf_var_mmmc_table)):
                 if global_tf_vars.tf_var_mmmc_table[preset] == self.mmmc_aocv_file_table[aocv][0]:
-                    for aocv_file in range(1, len(tf_var_common.mmmc_aocv_file_table[aocv])):
+                    for aocv_file in range(2, len(tf_var_common.mmmc_aocv_file_table[aocv])):
 
                         temp_type_flag_1 = 0
                         temp_type_flag_2 = 0
@@ -502,18 +502,34 @@ class MmmcGen(Messages, CommonFunc):
                                                                     '',
                                                                     self.mmmc_aocv_file_table[aocv][aocv_file])
                                                             )
-                                                        self.tf_symlink_file(
-                                                            self.create_lib_cdb_file_template(
-                                                                '',
-                                                                pvt_pvt[0],
-                                                                pvt_pvt[1],
-                                                                pvt_pvt[2],
-                                                                '',
-                                                                '',
-                                                                '',
-                                                                self.mmmc_aocv_file_table[aocv][aocv_file]),
-                                                            global_tf_vars.tf_run_dir_in_aocv
-                                                        )
+                                                        if self.mmmc_aocv_file_table[aocv][1] == 'copy':
+                                                            self.tf_cp_file(
+                                                                self.create_lib_cdb_file_template(
+                                                                    '',
+                                                                    pvt_pvt[0],
+                                                                    pvt_pvt[1],
+                                                                    pvt_pvt[2],
+                                                                    '',
+                                                                    '',
+                                                                    '',
+                                                                    self.mmmc_aocv_file_table[aocv][aocv_file]),
+                                                                global_tf_vars.tf_run_dir_in_aocv
+                                                            )
+                                                        elif self.mmmc_aocv_file_table[aocv][1] == 'link':
+                                                            self.tf_link_file(
+                                                                self.create_lib_cdb_file_template(
+                                                                    '',
+                                                                    pvt_pvt[0],
+                                                                    pvt_pvt[1],
+                                                                    pvt_pvt[2],
+                                                                    '',
+                                                                    '',
+                                                                    '',
+                                                                    self.mmmc_aocv_file_table[aocv][aocv_file]),
+                                                                global_tf_vars.tf_run_dir_in_aocv
+                                                            )
+                                                        else:
+                                                            self.mmmcgen_4(self.mmmc_aocv_file_table[aocv][0])
 #                                                if existing_flag == 0:
 #                                                    self.mmmcgen_2(
 #                                                        self.mmmc_aocv_file_table[aocv][aocv_file],
@@ -556,18 +572,34 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_aocv_file_table[aocv][aocv_file])
                                                     )
-                                                self.tf_symlink_file(
-                                                    self.create_lib_cdb_file_template(
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        self.mmmc_pvt_table[i][j],
-                                                        '',
-                                                        '',
-                                                        self.mmmc_aocv_file_table[aocv][aocv_file]),
-                                                    global_tf_vars.tf_run_dir_in_aocv
-                                                )
+                                                if self.mmmc_lib_file_table[lib][1] == 'copy':
+                                                    self.tf_cp_file(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_pvt_table[i][j],
+                                                            '',
+                                                            '',
+                                                            self.mmmc_aocv_file_table[aocv][aocv_file]),
+                                                        global_tf_vars.tf_run_dir_in_aocv
+                                                    )
+                                                elif self.mmmc_lib_file_table[lib][1] == 'link':
+                                                    self.tf_link_file(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_pvt_table[i][j],
+                                                            '',
+                                                            '',
+                                                            self.mmmc_aocv_file_table[aocv][aocv_file]),
+                                                        global_tf_vars.tf_run_dir_in_aocv
+                                                    )
+                                                else:
+                                                    self.mmmcgen_4(self.mmmc_aocv_file_table[aocv][0])
 #                                        if existing_flag == 0:
 #                                            self.mmmcgen_2(
 #                                                self.mmmc_aocv_file_table[aocv][aocv_file],
@@ -608,18 +640,34 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_aocv_file_table[aocv][aocv_file])
                                                     )
-                                                self.tf_symlink_file(
-                                                    self.create_lib_cdb_file_template(
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        self.mmmc_aocv_file_table[aocv][aocv_file]),
-                                                    global_tf_vars.tf_run_dir_in_aocv
-                                                )
+                                                if self.mmmc_lib_file_table[lib][1] == 'copy':
+                                                    self.tf_cp_file(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_aocv_file_table[aocv][aocv_file]),
+                                                        global_tf_vars.tf_run_dir_in_aocv
+                                                    )
+                                                elif self.mmmc_lib_file_table[lib][1] == 'link':
+                                                    self.tf_link_file(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_aocv_file_table[aocv][aocv_file]),
+                                                        global_tf_vars.tf_run_dir_in_aocv
+                                                    )
+                                                else:
+                                                    self.mmmcgen_4(self.mmmc_aocv_file_table[aocv][0])
                                                 break
 #                                        if existing_flag == 0:
 #                                            self.mmmcgen_2(
@@ -639,7 +687,7 @@ class MmmcGen(Messages, CommonFunc):
         for cdb in range(len(self.mmmc_cdb_file_table)):
             for preset in range(len(global_tf_vars.tf_var_mmmc_table)):
                 if global_tf_vars.tf_var_mmmc_table[preset] == self.mmmc_cdb_file_table[cdb][0]:
-                    for cdb_file in range(1, len(tf_var_common.mmmc_cdb_file_table[cdb])):
+                    for cdb_file in range(2, len(tf_var_common.mmmc_cdb_file_table[cdb])):
 
                         temp_type_flag_1 = 0
                         temp_type_flag_2 = 0
@@ -699,18 +747,34 @@ class MmmcGen(Messages, CommonFunc):
                                                                     '',
                                                                     self.mmmc_cdb_file_table[cdb][cdb_file])
                                                             )
-                                                        self.tf_symlink_file(
-                                                            self.create_lib_cdb_file_template(
-                                                                '',
-                                                                pvt[0],
-                                                                pvt[1],
-                                                                pvt[2],
-                                                                '',
-                                                                '',
-                                                                '',
-                                                                self.mmmc_cdb_file_table[cdb][cdb_file]),
-                                                            global_tf_vars.tf_run_dir_in_cdb
-                                                        )
+                                                        if self.mmmc_cdb_file_table[cdb][1] == 'copy':
+                                                            self.tf_cp_file(
+                                                                self.create_lib_cdb_file_template(
+                                                                    '',
+                                                                    pvt[0],
+                                                                    pvt[1],
+                                                                    pvt[2],
+                                                                    '',
+                                                                    '',
+                                                                    '',
+                                                                    self.mmmc_cdb_file_table[cdb][cdb_file]),
+                                                                global_tf_vars.tf_run_dir_in_cdb
+                                                            )
+                                                        elif self.mmmc_cdb_file_table[cdb][1] == 'link':
+                                                            self.tf_link_file(
+                                                                self.create_lib_cdb_file_template(
+                                                                    '',
+                                                                    pvt[0],
+                                                                    pvt[1],
+                                                                    pvt[2],
+                                                                    '',
+                                                                    '',
+                                                                    '',
+                                                                    self.mmmc_cdb_file_table[cdb][cdb_file]),
+                                                                global_tf_vars.tf_run_dir_in_cdb
+                                                            )
+                                                        else:
+                                                            self.mmmcgen_4(self.mmmc_cdb_file_table[cdb][0])
                                                 if existing_flag == 0:
                                                     self.mmmcgen_2(
                                                         self.mmmc_cdb_file_table[cdb][cdb_file],
@@ -753,18 +817,34 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_cdb_file_table[cdb][cdb_file])
                                                     )
-                                                self.tf_symlink_file(
-                                                    self.create_lib_cdb_file_template(
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        self.mmmc_pvt_table[i][j],
-                                                        '',
-                                                        '',
-                                                        self.mmmc_cdb_file_table[cdb][cdb_file]),
-                                                    global_tf_vars.tf_run_dir_in_cdb
-                                                )
+                                                if self.mmmc_cdb_file_table[cdb][1] == 'copy':
+                                                    self.tf_cp_file(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_pvt_table[i][j],
+                                                            '',
+                                                            '',
+                                                            self.mmmc_cdb_file_table[cdb][cdb_file]),
+                                                        global_tf_vars.tf_run_dir_in_cdb
+                                                    )
+                                                elif self.mmmc_cdb_file_table[cdb][1] == 'link':
+                                                    self.tf_link_file(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_pvt_table[i][j],
+                                                            '',
+                                                            '',
+                                                            self.mmmc_cdb_file_table[cdb][cdb_file]),
+                                                        global_tf_vars.tf_run_dir_in_cdb
+                                                    )
+                                                else:
+                                                    self.mmmcgen_4(self.mmmc_cdb_file_table[cdb][0])
                                         if existing_flag == 0:
                                             self.mmmcgen_2(
                                                 self.mmmc_cdb_file_table[cdb][cdb_file],
@@ -804,18 +884,34 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_cdb_file_table[cdb][cdb_file])
                                                     )
-                                                self.tf_symlink_file(
-                                                    self.create_lib_cdb_file_template(
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        self.mmmc_pvt_table[i][j],
-                                                        '',
-                                                        '',
-                                                        self.mmmc_cdb_file_table[cdb][cdb_file]),
-                                                    global_tf_vars.tf_run_dir_in_cdb
-                                                )
+                                                if self.mmmc_cdb_file_table[cdb][1] == 'copy':
+                                                    self.tf_cp_file(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_cdb_file_table[cdb][cdb_file]),
+                                                        global_tf_vars.tf_run_dir_in_cdb
+                                                    )
+                                                elif self.mmmc_cdb_file_table[cdb][1] == 'link':
+                                                    self.tf_link_file(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_cdb_file_table[cdb][cdb_file]),
+                                                        global_tf_vars.tf_run_dir_in_cdb
+                                                    )
+                                                else:
+                                                    self.mmmcgen_4(self.mmmc_cdb_file_table[cdb][0])
                                                 break
                                         if existing_flag == 0:
                                             self.mmmcgen_2(
