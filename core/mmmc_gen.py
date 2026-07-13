@@ -71,7 +71,8 @@ class MmmcGen(Messages, CommonFunc):
                                self.mmmc_analysis_view_table[i][2].split(),
                                self.mmmc_analysis_view_table[i][3].split(),
                                self.mmmc_analysis_view_table[i][4].split(),
-                               self.mmmc_analysis_view_table[i][5].split()
+                               self.mmmc_analysis_view_table[i][5].split(),
+                               self.mmmc_analysis_view_table[i][6].split()
                                ):
                 global_tf_vars.mmmc_analysis_view_table_sdc_mode[n] = mix[0]
                 global_tf_vars.mmmc_analysis_view_table_pvt_p[n] = mix[1]
@@ -80,6 +81,7 @@ class MmmcGen(Messages, CommonFunc):
                 global_tf_vars.mmmc_analysis_view_table_pvt[n] = mix[1] + mix[2] + mix[3]
                 global_tf_vars.mmmc_analysis_view_table_parasitic[n] = mix[4]
                 global_tf_vars.mmmc_analysis_view_table_mode[n] = mix[5]
+                global_tf_vars.mmmc_analysis_view_table_active_status[n] = mix[6]
                 global_tf_vars.mmmc_analysis_view_table_name[n] = mix[0] + '_' + mix[1] + mix[2] + mix[3] + mix[4] + \
                     '_' + mix[5]
                 global_tf_vars.mmmc_analysis_view_table_lib[n] = ''
@@ -98,7 +100,7 @@ class MmmcGen(Messages, CommonFunc):
         for lib in range(len(self.mmmc_lib_file_table)):
             for preset in range(len(global_tf_vars.tf_var_mmmc_table)):
                 if global_tf_vars.tf_var_mmmc_table[preset] == self.mmmc_lib_file_table[lib][0]:
-                    for lib_file in range(1, len(tf_var_common.mmmc_lib_file_table[lib])):
+                    for lib_file in range(2, len(tf_var_common.mmmc_lib_file_table[lib])):
 
                         temp_type_flag_1 = 0
                         temp_type_flag_2 = 0
@@ -160,18 +162,35 @@ class MmmcGen(Messages, CommonFunc):
                                                                     '',
                                                                     self.mmmc_lib_file_table[lib][lib_file])
                                                             )
-                                                        self.tf_symlink_file(
-                                                            self.create_lib_cdb_file_template(
-                                                                '',
-                                                                pvt_pvt[0],
-                                                                pvt_pvt[1],
-                                                                pvt_pvt[2],
-                                                                '',
-                                                                '',
-                                                                '',
-                                                                self.mmmc_lib_file_table[lib][lib_file]),
-                                                            global_tf_vars.tf_run_dir_in_lib
-                                                        )
+                                                        if self.mmmc_lib_file_table[lib][1] == 'copy':
+                                                            self.tf_cp_file(
+                                                                self.create_lib_cdb_file_template(
+                                                                    '',
+                                                                    pvt_pvt[0],
+                                                                    pvt_pvt[1],
+                                                                    pvt_pvt[2],
+                                                                    '',
+                                                                    '',
+                                                                    '',
+                                                                    self.mmmc_lib_file_table[lib][lib_file]),
+                                                                global_tf_vars.tf_run_dir_in_lib
+                                                            )
+                                                        elif self.mmmc_lib_file_table[lib][1] == 'link':
+                                                            self.tf_link_file(
+                                                                self.create_lib_cdb_file_template(
+                                                                    '',
+                                                                    pvt_pvt[0],
+                                                                    pvt_pvt[1],
+                                                                    pvt_pvt[2],
+                                                                    '',
+                                                                    '',
+                                                                    '',
+                                                                    self.mmmc_lib_file_table[lib][lib_file]),
+                                                                global_tf_vars.tf_run_dir_in_lib
+                                                            )
+                                                        else:
+                                                            self.mmmcgen_4(self.mmmc_lib_file_table[lib][0])
+
                                                 if existing_flag == 0:
                                                     self.mmmcgen_2(
                                                         self.mmmc_lib_file_table[lib][lib_file],
@@ -214,18 +233,35 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_lib_file_table[lib][lib_file])
                                                     )
-                                                self.tf_symlink_file(
-                                                    self.create_lib_cdb_file_template(
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        self.mmmc_pvt_table[i][j],
-                                                        '',
-                                                        '',
-                                                        self.mmmc_lib_file_table[lib][lib_file]),
-                                                    global_tf_vars.tf_run_dir_in_lib
-                                                )
+                                                if self.mmmc_lib_file_table[lib][1] == 'copy':
+                                                    self.tf_cp_file(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_pvt_table[i][j],
+                                                            '',
+                                                            '',
+                                                            self.mmmc_lib_file_table[lib][lib_file]),
+                                                        global_tf_vars.tf_run_dir_in_lib
+                                                    )
+                                                elif self.mmmc_lib_file_table[lib][1] == 'link':
+                                                    self.tf_link_file(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_pvt_table[i][j],
+                                                            '',
+                                                            '',
+                                                            self.mmmc_lib_file_table[lib][lib_file]),
+                                                        global_tf_vars.tf_run_dir_in_lib
+                                                    )
+                                                else:
+                                                    self.mmmcgen_4(self.mmmc_lib_file_table[lib][0])
+
                                         if existing_flag == 0:
                                             self.mmmcgen_2(
                                                 self.mmmc_lib_file_table[lib][lib_file],
@@ -281,18 +317,35 @@ class MmmcGen(Messages, CommonFunc):
                                                                         global_tf_vars.mmmc_analysis_view_table_mode[m],
                                                                         self.mmmc_lib_file_table[lib][lib_file])
                                                                 )
-                                                            self.tf_symlink_file(
-                                                                self.create_lib_cdb_file_template(
-                                                                    global_tf_vars.mmmc_analysis_view_table_sdc_mode[m],
-                                                                    pvt_pvt[0],
-                                                                    pvt_pvt[1],
-                                                                    pvt_pvt[2],
-                                                                    '',
-                                                                    pvt_pvt[3],
-                                                                    global_tf_vars.mmmc_analysis_view_table_mode[m],
-                                                                    self.mmmc_lib_file_table[lib][lib_file]),
-                                                                global_tf_vars.tf_run_dir_in_lib
-                                                            )
+                                                            if self.mmmc_lib_file_table[lib][1] == 'copy':
+                                                                self.tf_cp_file(
+                                                                    self.create_lib_cdb_file_template(
+                                                                        global_tf_vars.mmmc_analysis_view_table_sdc_mode[m],
+                                                                        pvt_pvt[0],
+                                                                        pvt_pvt[1],
+                                                                        pvt_pvt[2],
+                                                                        '',
+                                                                        pvt_pvt[3],
+                                                                        global_tf_vars.mmmc_analysis_view_table_mode[m],
+                                                                        self.mmmc_lib_file_table[lib][lib_file]),
+                                                                    global_tf_vars.tf_run_dir_in_lib
+                                                                )
+                                                            elif self.mmmc_lib_file_table[lib][1] == 'link':
+                                                                self.tf_link_file(
+                                                                    self.create_lib_cdb_file_template(
+                                                                        global_tf_vars.mmmc_analysis_view_table_sdc_mode[m],
+                                                                        pvt_pvt[0],
+                                                                        pvt_pvt[1],
+                                                                        pvt_pvt[2],
+                                                                        '',
+                                                                        pvt_pvt[3],
+                                                                        global_tf_vars.mmmc_analysis_view_table_mode[m],
+                                                                        self.mmmc_lib_file_table[lib][lib_file]),
+                                                                    global_tf_vars.tf_run_dir_in_lib
+                                                                )
+                                                            else:
+                                                                self.mmmcgen_4(self.mmmc_lib_file_table[lib][0])
+
                                                     if existing_flag == 0:
                                                         self.mmmcgen_2(
                                                             self.mmmc_lib_file_table[lib][lib_file],
@@ -339,18 +392,35 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_lib_file_table[lib][lib_file])
                                                     )
-                                                self.tf_symlink_file(
-                                                    self.create_lib_cdb_file_template(
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        '',
-                                                        self.mmmc_lib_file_table[lib][lib_file]),
-                                                    global_tf_vars.tf_run_dir_in_lib
-                                                )
+                                                if self.mmmc_lib_file_table[lib][1] == 'copy':
+                                                    self.tf_cp_file(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_lib_file_table[lib][lib_file]),
+                                                        global_tf_vars.tf_run_dir_in_lib
+                                                    )
+                                                elif self.mmmc_lib_file_table[lib][1] == 'link':
+                                                    self.tf_link_file(
+                                                        self.create_lib_cdb_file_template(
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            '',
+                                                            self.mmmc_lib_file_table[lib][lib_file]),
+                                                        global_tf_vars.tf_run_dir_in_lib
+                                                    )
+                                                else:
+                                                    self.mmmcgen_4(self.mmmc_lib_file_table[lib][0])
+
                                                 break
                                         if existing_flag == 0:
                                             self.mmmcgen_2(
@@ -828,7 +898,8 @@ class MmmcGen(Messages, CommonFunc):
         mmmc_analysis_view_setup = ''
 
         for i in range(len(global_tf_vars.mmmc_analysis_view_table_sdc_mode)):
-            if global_tf_vars.mmmc_analysis_view_table_mode[i] == 's':
+            if global_tf_vars.mmmc_analysis_view_table_mode[i] == 's' and \
+                    global_tf_vars.mmmc_analysis_view_table_active_status[i] == 'active':
                 mmmc_analysis_view_setup = mmmc_analysis_view_setup + ' ' + \
                                            global_tf_vars.mmmc_analysis_view_table_name[i]
 
@@ -839,7 +910,8 @@ class MmmcGen(Messages, CommonFunc):
         mmmc_analysis_view_hold = ''
 
         for i in range(len(global_tf_vars.mmmc_analysis_view_table_sdc_mode)):
-            if global_tf_vars.mmmc_analysis_view_table_mode[i] == 'h':
+            if global_tf_vars.mmmc_analysis_view_table_mode[i] == 'h' and \
+                    global_tf_vars.mmmc_analysis_view_table_active_status[i] == 'active':
                 mmmc_analysis_view_hold = mmmc_analysis_view_hold + ' ' + \
                                           global_tf_vars.mmmc_analysis_view_table_name[i]
 
@@ -850,7 +922,8 @@ class MmmcGen(Messages, CommonFunc):
         mmmc_analysis_view_power = ''
 
         for i in range(len(global_tf_vars.mmmc_analysis_view_table_sdc_mode)):
-            if global_tf_vars.mmmc_analysis_view_table_mode[i] == 'p':
+            if global_tf_vars.mmmc_analysis_view_table_mode[i] == 'p' and \
+                    global_tf_vars.mmmc_analysis_view_table_active_status[i] == 'active':
                 mmmc_analysis_view_power = mmmc_analysis_view_power + ' ' + \
                                            global_tf_vars.mmmc_analysis_view_table_name[i]
 

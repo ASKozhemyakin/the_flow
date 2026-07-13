@@ -197,7 +197,6 @@ if __name__ == "__main__":
         MmmcGen.run_mmmc_gen()
         PhyGen.run_phy_gen()
 
-
     '''
     TCL_SCR Generator
     '''
