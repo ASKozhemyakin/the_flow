@@ -675,9 +675,9 @@ class MmmcGen(Messages, CommonFunc):
 #                                                self.mmmc_aocv_file_table[aocv][0]
 #                                            )
 
-                        if existing_flag == 0:
-                            self.mmmcgen_1(self.mmmc_aocv_file_table[aocv][aocv_file], 'mmmc_aocv_file_table[' +
-                                           global_tf_vars.tf_var_mmmc_table[preset] + ']')
+#                        if existing_flag == 0:
+#                            self.mmmcgen_1(self.mmmc_aocv_file_table[aocv][aocv_file], 'mmmc_aocv_file_table[' +
+#                                           global_tf_vars.tf_var_mmmc_table[preset] + ']')
 
         self.tf_info('(TFMmmcGen.make_aocv_files_list_for_each_view) finish')
 
