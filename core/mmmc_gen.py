@@ -449,8 +449,6 @@ class MmmcGen(Messages, CommonFunc):
 
                         if '{{ process_voltage_temperature }}' in self.mmmc_aocv_file_table[aocv][aocv_file]:
                             temp_type_flag_2 = 1
-                        elif '{{ analysis_mode }}' in self.mmmc_aocv_file_table[aocv][aocv_file]:
-                            temp_type_flag_3 = 1
                         elif '{{ process }}' in self.mmmc_aocv_file_table[aocv][aocv_file] or \
                                 '{{ voltage }}' in self.mmmc_aocv_file_table[aocv][aocv_file] or \
                                 '{{ temperature }}' in self.mmmc_aocv_file_table[aocv][aocv_file]:
@@ -572,7 +570,7 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_aocv_file_table[aocv][aocv_file])
                                                     )
-                                                if self.mmmc_lib_file_table[lib][1] == 'copy':
+                                                if self.mmmc_aocv_file_table[aocv][1] == 'copy':
                                                     self.tf_cp_file(
                                                         self.create_lib_cdb_file_template(
                                                             '',
@@ -585,7 +583,7 @@ class MmmcGen(Messages, CommonFunc):
                                                             self.mmmc_aocv_file_table[aocv][aocv_file]),
                                                         global_tf_vars.tf_run_dir_in_aocv
                                                     )
-                                                elif self.mmmc_lib_file_table[lib][1] == 'link':
+                                                elif self.mmmc_aocv_file_table[aocv][1] == 'link':
                                                     self.tf_link_file(
                                                         self.create_lib_cdb_file_template(
                                                             '',
@@ -640,7 +638,7 @@ class MmmcGen(Messages, CommonFunc):
                                                             '',
                                                             self.mmmc_aocv_file_table[aocv][aocv_file])
                                                     )
-                                                if self.mmmc_lib_file_table[lib][1] == 'copy':
+                                                if self.mmmc_aocv_file_table[aocv][1] == 'copy':
                                                     self.tf_cp_file(
                                                         self.create_lib_cdb_file_template(
                                                             '',
@@ -653,7 +651,7 @@ class MmmcGen(Messages, CommonFunc):
                                                             self.mmmc_aocv_file_table[aocv][aocv_file]),
                                                         global_tf_vars.tf_run_dir_in_aocv
                                                     )
-                                                elif self.mmmc_lib_file_table[lib][1] == 'link':
+                                                elif self.mmmc_aocv_file_table[aocv][1] == 'link':
                                                     self.tf_link_file(
                                                         self.create_lib_cdb_file_template(
                                                             '',
@@ -668,6 +666,7 @@ class MmmcGen(Messages, CommonFunc):
                                                     )
                                                 else:
                                                     self.mmmcgen_4(self.mmmc_aocv_file_table[aocv][0])
+
                                                 break
 #                                        if existing_flag == 0:
 #                                            self.mmmcgen_2(
@@ -676,9 +675,9 @@ class MmmcGen(Messages, CommonFunc):
 #                                                self.mmmc_aocv_file_table[aocv][0]
 #                                            )
 
-#                        if existing_flag == 0:
-#                            self.mmmcgen_1(self.mmmc_aocv_file_table[aocv][aocv_file], 'mmmc_aocv_file_table[' +
-#                                           global_tf_vars.tf_var_mmmc_table[preset] + ']')
+                        if existing_flag == 0:
+                            self.mmmcgen_1(self.mmmc_aocv_file_table[aocv][aocv_file], 'mmmc_aocv_file_table[' +
+                                           global_tf_vars.tf_var_mmmc_table[preset] + ']')
 
         self.tf_info('(TFMmmcGen.make_aocv_files_list_for_each_view) finish')
 
@@ -781,7 +780,7 @@ class MmmcGen(Messages, CommonFunc):
                                                         self.mmmc_pvt_p_table[p][0] +
                                                         self.mmmc_pvt_v_table[v][0] +
                                                         self.mmmc_pvt_t_table[t][0],
-                                                        self.mmmc_lib_file_table[cdb][0]
+                                                        self.mmmc_cdb_file_table[cdb][0]
                                                     )
 
                         if temp_type_flag_2 == 1:
@@ -849,7 +848,7 @@ class MmmcGen(Messages, CommonFunc):
                                             self.mmmcgen_2(
                                                 self.mmmc_cdb_file_table[cdb][cdb_file],
                                                 self.mmmc_pvt_table[i][0],
-                                                self.mmmc_lib_file_table[cdb][0]
+                                                self.mmmc_cdb_file_table[cdb][0]
                                             )
                         if temp_type_flag_4 == 1:
                             for i in range(len(self.mmmc_pvt_table)):
@@ -912,12 +911,13 @@ class MmmcGen(Messages, CommonFunc):
                                                     )
                                                 else:
                                                     self.mmmcgen_4(self.mmmc_cdb_file_table[cdb][0])
+
                                                 break
                                         if existing_flag == 0:
                                             self.mmmcgen_2(
                                                 self.mmmc_cdb_file_table[cdb][cdb_file],
                                                 self.mmmc_pvt_table[i][0],
-                                                self.mmmc_lib_file_table[cdb][0]
+                                                self.mmmc_cdb_file_table[cdb][0]
                                             )
 
                         if existing_flag == 0:
