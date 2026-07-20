@@ -228,6 +228,14 @@ def check_tables():
             m.init_6('phy_cl_table', 'tf_var_common.py')
 
     try:
+        tf_var_common.phy_lvs_table
+    except AttributeError:
+        if global_tf_vars.tf_is_impl == 1 or global_tf_vars.tf_is_power == 1:
+            m.init_5('phy_lvs_table', 'tf_var_common.py')
+        else:
+            m.init_6('phy_lvs_table', 'tf_var_common.py')
+
+    try:
         tf_var_tmp.tf_var_syn_table
     except AttributeError:
         m.init_6('tf_var_syn_table', 'tf_var.py')

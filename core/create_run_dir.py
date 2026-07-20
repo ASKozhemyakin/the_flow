@@ -11,6 +11,7 @@ Run directory structure:
     |   |   +-- cfg
     |   |   +-- cl
     |   |   +-- lef
+    |   |   +-- lvs
     |   |   +-- lib
     |   |   +-- aocv
     |   |   +-- rtl
@@ -54,6 +55,7 @@ def run_dir_structure_is():
     global_tf_vars.tf_run_dir_in_cl = global_tf_vars.tf_run_dir_in + '/cl'
     global_tf_vars.tf_run_dir_in_gds = global_tf_vars.tf_run_dir_in + '/gds'
     global_tf_vars.tf_run_dir_in_lef = global_tf_vars.tf_run_dir_in + '/lef'
+    global_tf_vars.tf_run_dir_in_lvs = global_tf_vars.tf_run_dir_in + '/lvs'
     global_tf_vars.tf_run_dir_in_lib = global_tf_vars.tf_run_dir_in + '/lib'
     global_tf_vars.tf_run_dir_in_aocv = global_tf_vars.tf_run_dir_in + '/aocv'
     global_tf_vars.tf_run_dir_in_rtl = global_tf_vars.tf_run_dir_in + '/rtl'
@@ -86,6 +88,7 @@ def create_run_dir():
             global_tf_vars.tf_run_dir_in_cl, \
             global_tf_vars.tf_run_dir_in_gds, \
             global_tf_vars.tf_run_dir_in_lef, \
+            global_tf_vars.tf_run_dir_in_lvs, \
             global_tf_vars.tf_run_dir_in_lib, \
             global_tf_vars.tf_run_dir_in_aocv, \
             global_tf_vars.tf_run_dir_in_rtl,\

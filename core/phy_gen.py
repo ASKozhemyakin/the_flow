@@ -12,11 +12,12 @@ from common_func import CommonFunc
 
 class PhyGen(Messages, CommonFunc):
 
-    def __init__(self, phy_lef_table_, phy_verilog_table_, phy_cl_table_, phy_gds_table_):
+    def __init__(self, phy_lef_table_, phy_verilog_table_, phy_cl_table_, phy_gds_table_, phy_lvs_table_):
         self.phy_lef_table = phy_lef_table_
         self.phy_verilog_table = phy_verilog_table_
         self.phy_cl_table = phy_cl_table_
         self.phy_gds_table = phy_gds_table_
+        self.phy_lvs_table = phy_lvs_table_
 
     def make_lef_list(self):
         """
@@ -166,6 +167,43 @@ class PhyGen(Messages, CommonFunc):
         t = Template('set gds_list "{{ n }}"')
         return t.render(n=phy_gds_files)
 
+    def make_lvs_list(self):
+        """
+        Define global_tf_vars.phy_lvs_files variable.
+        """
+
+        for i in range(len(self.phy_lvs_table)):
+            for j in range(len(global_tf_vars.tf_var_mmmc_table)):
+                if self.phy_lvs_table[i][0] == global_tf_vars.tf_var_mmmc_table[j]:
+                    for n in range(2, len(self.phy_lvs_table[i])):
+                        if self.tf_file_exists_check(self.phy_lvs_table[i][n]) == 'True':
+                            global_tf_vars.phy_lvs_files = \
+                                global_tf_vars.phy_lvs_files + \
+                                ' \\\n    ' + \
+                                '../in/lvs/' + \
+                                os.path.basename(
+                                    self.phy_lvs_table[i][n]
+                                )
+                            if self.phy_lvs_table[i][1] == 'copy':
+                                self.tf_cp_file(self.phy_lvs_table[i][n], global_tf_vars.tf_run_dir_in_lvs)
+                            elif self.phy_lvs_table[i][1] == 'link':
+                                self.tf_link_file(self.phy_lvs_table[i][n], global_tf_vars.tf_run_dir_in_lvs)
+                            else:
+                                self.phygen_2(self.phy_lvs_table[i][n], 'phy_lvs_table')
+                        elif self.tf_file_exists_check(self.phy_lvs_table[i][n]) == 'False':
+                            self.phygen_1(self.phy_lvs_table[i][n], 'phy_lvs_table')
+
+    @staticmethod
+    def create_lvs_list_template(phy_lvs_files):
+        """
+        Template for .tcl script.
+
+        :param phy_lvs_files: global_tf_vars.phy_lvs_files variable.
+        :return: set lvs_list "{{ phy_lvs_files }}"
+        """
+        t = Template('set lvs_list "{{ n }}"')
+        return t.render(n=phy_lvs_files)
+
     @staticmethod
     def make_phy_config_file():
         """
@@ -183,13 +221,15 @@ class PhyGen(Messages, CommonFunc):
             print(PhyGen.create_cl_list_template(global_tf_vars.phy_cl_dirs))
             print('')
             print(PhyGen.create_gds_list_template(global_tf_vars.phy_gds_files))
+            print('')
+            print(PhyGen.create_lvs_list_template(global_tf_vars.phy_lvs_files))
         sys.stdout = original_stdout
 
     @staticmethod
     def run_phy_gen():
 
         tf_phy_gen = PhyGen(tf_var_common.phy_lef_table, tf_var_common.phy_verilog_table, tf_var_common.phy_cl_table,
-                            tf_var_common.phy_gds_table)
+                            tf_var_common.phy_gds_table, tf_var_common.phy_lvs_table)
 
         if global_tf_vars.tf_is_syn == 1 \
                 or global_tf_vars.tf_is_impl == 1 \
@@ -207,5 +247,9 @@ class PhyGen(Messages, CommonFunc):
         if global_tf_vars.tf_is_impl == 1 \
                 or global_tf_vars.tf_is_power == 1:
             tf_phy_gen.make_gds_list()
+
+        if global_tf_vars.tf_is_impl == 1 \
+                or global_tf_vars.tf_is_power == 1:
+            tf_phy_gen.make_lvs_list()
 
         tf_phy_gen.make_phy_config_file()
