@@ -1026,6 +1026,30 @@ class MmmcGen(Messages, CommonFunc):
         return mmmc_analysis_view_power
 
     @staticmethod
+    def make_analysis_view_leakage():
+        mmmc_analysis_view_leakage = ''
+
+        for i in range(len(global_tf_vars.mmmc_analysis_view_table_sdc_mode)):
+            if global_tf_vars.mmmc_analysis_view_table_mode[i] == 'l' and \
+                    global_tf_vars.mmmc_analysis_view_table_active_status[i] == 'active':
+                mmmc_analysis_view_leakage = mmmc_analysis_view_leakage + ' ' + \
+                                          global_tf_vars.mmmc_analysis_view_table_name[i]
+
+        return mmmc_analysis_view_leakage
+
+    @staticmethod
+    def make_analysis_view_dynamic():
+        mmmc_analysis_view_dynamic = ''
+
+        for i in range(len(global_tf_vars.mmmc_analysis_view_table_sdc_mode)):
+            if global_tf_vars.mmmc_analysis_view_table_mode[i] == 'd' and \
+                    global_tf_vars.mmmc_analysis_view_table_active_status[i] == 'active':
+                mmmc_analysis_view_dynamic = mmmc_analysis_view_dynamic + ' ' + \
+                                          global_tf_vars.mmmc_analysis_view_table_name[i]
+
+        return mmmc_analysis_view_dynamic
+
+    @staticmethod
     def create_library_set_template(name, lib_files, aocv_files, cdb_files):
         if (aocv_files == "") and (cdb_files == ""):
             t = Template('create_library_set -name {{ n }} -timing \"{{ lib }}\"')
@@ -1066,9 +1090,13 @@ class MmmcGen(Messages, CommonFunc):
         return t.render(n=name, c_m=constraint_mode, d_c=delay_corner)
 
     @staticmethod
-    def set_analysis_view_template(setup, hold):
-        t = Template('set_analysis_view -setup \"{{ s }}\" -hold \"{{ h }}\"')
-        return t.render(s=setup, h=hold)
+    def set_analysis_view_template(setup, hold, leakage, dynamic):
+        t = Template(
+            'set_analysis_view -setup \"{{ s }}\" -hold \"{{ h }}\"'
+                   '{% if l %} -leakage \"{{ l }}\"{% endif %}'
+                   '{% if d %} -dynamic \"{{ d }}\"{% endif %}'
+        )
+        return t.render(s=setup, h=hold, l=leakage, d=dynamic)
 
     def make_mmmc_config_file(self):
         self.tf_info('(TFMmmcGen.make_mmmc_config_file) start')
@@ -1189,7 +1217,9 @@ class MmmcGen(Messages, CommonFunc):
                 self.make_analysis_view_setup(),
                 self.make_analysis_view_setup() + ' ' +
                 self.make_analysis_view_hold() + ' ' +
-                self.make_analysis_view_power()
+                self.make_analysis_view_power(),
+                self.make_analysis_view_leakage(),
+                self.make_analysis_view_dynamic()
             ))
         sys.stdout = original_stdout
 
@@ -1209,6 +1239,11 @@ class MmmcGen(Messages, CommonFunc):
             data = data.replace('-sdc_files', '\\\n    -sdc_files')
             data = data.replace('-constraint_mode', '\\\n    -constraint_mode')
             data = data.replace('-delay_corner', '\\\n    -delay_corner')
+            data = data.replace('-create_library_set ', '\\\n    -create_library_set ')
+            data = data.replace('-setup', '\\\n    -setup')
+            data = data.replace('-hold', '\\\n    -hold')
+            data = data.replace('-leakage', '\\\n    -leakage')
+            data = data.replace('-dynamic', '\\\n    -dynamic')
         with open(mmmc_config_file, 'w') as f:
             f.write(data)
 
